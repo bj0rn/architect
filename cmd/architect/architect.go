@@ -52,28 +52,65 @@ func init() {
 func RunArchitect(configReader config.ConfigReader, downloader nexus.Downloader) {
 
 	// Read build config
-	c, err := configReader.ReadConfig()
+	cfg, err := configReader.ReadConfig()
 	if err != nil {
 		logrus.Fatalf("Could not read configuration: %s", err)
 	}
 
-	logrus.Debugf("Config %+v", c)
+	logrus.Debugf("Config %+v", cfg)
 
-	err = configReader.AddRegistryCredentials(c)
+	err = configReader.AddRegistryCredentials(cfg)
 	if err != nil {
 		logrus.Fatalf("Could not read configuration: %s", err)
 	}
 
-	if c.DockerSpec.RetagWith != "" {
+	if cfg.DockerSpec.RetagWith != "" {
 		logrus.Info("Perform retag")
-		if err := java.Retag(*c); err != nil {
+
+		tagger, err := java.CreateTagger(*cfg)
+
+		if err != nil {
 			logrus.Fatalf("Failed to retag temporary image: %s", err)
 		}
 
+		err = tagger.RetagTemporary()
+
+		if err != nil {
+			logrus.Fatalf("Failed to retag temporary image: %s", err)
+		}
+
+
 	} else {
+		logrus.Debugf("Download deliverable for GAV %-v", cfg.MavenGav)
+		deliverable, err := downloader.DownloadArtifact(&cfg.MavenGav)
+
+		if err != nil {
+			logrus.Fatalf("Could not download deliverable %-v", cfg.MavenGav)
+		}
+
+		builder, err := java.CreateBuilder(*cfg, deliverable)
+
 		logrus.Info("Perform build")
-		if err := java.Build(*c, downloader); err != nil {
+
+		err = builder.Build()
+
+		if err != nil {
 			logrus.Fatalf("Failed to build image: %s", err)
+		}
+
+		if cfg.DockerSpec.TagWith != "" {
+			err = builder.TagTemporary()
+
+			if err != nil {
+				logrus.Fatalf("Failed to tag image: %s", err)
+			}
+
+		} else {
+			err = builder.Tag()
+
+			if err != nil {
+				logrus.Fatalf("Failed to tag image: %s", err)
+			}
 		}
 	}
 

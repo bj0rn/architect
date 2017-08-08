@@ -17,7 +17,7 @@ type FileGenerator interface {
 	Write(writer io.Writer) error
 }
 
-func Prepare(buildinfo global.BuildInfo, deliverable global.Deliverable) (string, error) {
+func Prepare(appVersion, auroraVersion string, deliverable global.Deliverable) (string, error) {
 
 	// Create docker build folder
 	dockerBuildPath, err := ioutil.TempDir("", "deliverable")

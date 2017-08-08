@@ -15,6 +15,7 @@ import (
 type ImageInfoProvider interface {
 	GetManifest(repository string, tag string) (*schema1.SignedManifest, error)
 	GetManifestEnv(repository string, tag string, name string) (string, error)
+	GetManifestEnvMap(repository string, tag string) (map[string]string, error)
 	GetTags(repository string) (*TagsAPIResponse, error)
 }
 
