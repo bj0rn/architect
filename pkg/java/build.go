@@ -41,35 +41,8 @@ func Prepper(downloader nexus.Downloader) process.Prepper {
 			return nil, errors.Wrap(err, "Error prepare artifact")
 		}
 
-		versionTags, err := auroraVersions.GetAppVersion().GetVersionTags(cfg.DockerSpec.PushExtraTags)
-		if err != nil {
-			return nil, errors.Wrap(err, "Error resolving extra tags")
-		}
-		ds := cfg.DockerSpec
-		if !ds.TagOverwrite {
-			logrus.Debug("Tags Overwrite disabled, filtering tags")
-
-			repositoryTags, err := provider.GetTags(ds.OutputRepository)
-			logrus.Debug("Tags in repository ", repositoryTags)
-			if err != nil {
-				return nil, errors.Wrapf(err, "Error in GetTags, repository=%s", ds.OutputRepository)
-			}
-
-			appVersion := auroraVersions.GetAppVersion()
-			versionTags, err = appVersion.FilterVersionTags(versionTags, repositoryTags.Tags)
-			if err != nil {
-				return nil, errors.Wrapf(err, "Error in FilterVersionTags, app_version=%s, "+
-					"versionTags=%v, repositoryTags=%v",
-					appVersion, versionTags, repositoryTags.Tags)
-			}
-			logrus.Debug("Filtered tags ", versionTags)
-		}
-
-		logrus.Debugf("Build docker image and create tags, path=%s", buildPath)
-		tagsToPush := docker.CreateImageNameFromSpecAndTags(versionTags, ds.OutputRegistry, ds.OutputRepository)
-
 		buildConf := docker.DockerBuildConfig{
-			Tags:        tagsToPush,
+			AppVersion: auroraVersions.GetAppVersion().GetVersionTags(cfg.DockerSpec.PushExtraTags),
 			BuildFolder: buildPath,
 		}
 		return []docker.DockerBuildConfig{buildConf}, nil

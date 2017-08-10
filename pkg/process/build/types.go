@@ -7,4 +7,4 @@ import (
 
 // Prepper is a fuction used to prepare a docker image. It is called within the context of
 // The
-type Prepper func(config *config.Config, registry docker.ImageInfoProvider) ([]docker.DockerBuildConfig, error)
+type Prepper func(config *config.Config, registry docker.ImageInfoProvider) (config.AppVersion, []docker.DockerBuildConfig, error)

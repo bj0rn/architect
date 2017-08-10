@@ -20,7 +20,7 @@ RUN chmod -R 777 $HOME && \
 	rm $TRUST_STORE && \
 	ln -s $HOME/architect/cacerts $TRUST_STORE
 
-ENV APP_VERSION="2.0.0-SNAPSHOT" AURORA_VERSION="2.0.0-SNAPSHOT-b2.3.2-test-oracle8-1.0.2" LOGBACK_FILE="$HOME/architect/logback.xml" PUSH_EXTRA_TAGS=",,,," SNAPSHOT_TAG="2.0.0-SNAPSHOT" TZ="Europe/Oslo"
+ENV APP_VERSION="2.0.0-SNAPSHOT" AURORA_VERSION="2.0.0-SNAPSHOT-b2.3.2-test-oracle8-1.0.2" LOGBACK_FILE="$HOME/architect/logback.xml" PUSH_EXTRA_TAGS="" SNAPSHOT_TAG="2.0.0-SNAPSHOT" TZ="Europe/Oslo"
 `
 
 func TestBuild(t *testing.T) {

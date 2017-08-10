@@ -24,7 +24,7 @@ func TestApplicationPrepare(t *testing.T) {
 	prepper := prepare.Prepper(registryClient)
 	bc, err := prepper(&c, dockerRegistry)
 	for _, b := range bc {
-		print(b.Tags)
+		print(b.VersionTags)
 		print(b.BuildFolder)
 	}
 	assert.NoError(t, err)

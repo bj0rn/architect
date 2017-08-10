@@ -118,7 +118,7 @@ func Prepper(npmRegistry npm.Downloader) process.Prepper {
 			}
 			buildsConfigs[i] = docker.DockerBuildConfig{
 				BuildFolder: preparedImage.Path,
-				Tags:        docker.CreateImageNameFromSpecAndTags(tags, outputRegistry, outputRepository),
+				VersionTags:        docker.CreateImageNameFromSpecAndTags(tags, outputRegistry, outputRepository),
 			}
 		}
 		return buildsConfigs, nil

@@ -25,7 +25,7 @@ type RegistryCredentials struct {
 }
 
 type DockerBuildConfig struct {
-	Tags        []string
+	VersionTags []string
 	BuildFolder string
 }
 
@@ -43,12 +43,11 @@ func NewDockerClient() (*DockerClient, error) {
 	return &DockerClient{Client: DockerClientProxy{*cli}}, nil
 }
 
-func (d *DockerClient) BuildImage(buildConfig DockerBuildConfig) (string, error) {
+func (d *DockerClient) BuildImage(buildFolder string) (string, error) {
 	dockerOpt := types.ImageBuildOptions{
-		Tags:           buildConfig.Tags,
 		SuppressOutput: false,
 	}
-	tarReader := createContextTarStreamReader(buildConfig.BuildFolder)
+	tarReader := createContextTarStreamReader(buildFolder)
 	build, err := d.Client.ImageBuild(context.Background(), tarReader, dockerOpt)
 	if err != nil {
 		return "", errors.Wrap(err, "Error building image")
@@ -81,15 +80,6 @@ func (d *DockerClient) TagImage(imageId string, tag string) error {
 	return nil
 }
 
-func (d *DockerClient) TagImages(imageId string, tags []string) error {
-	for _, tag := range tags {
-		err := d.TagImage(imageId, tag)
-		if err != nil {
-			return errors.Wrap(err, "Error Tagging image")
-		}
-	}
-	return nil
-}
 
 func (d *DockerClient) PushImage(tag string, credentials *RegistryCredentials) error {
 	logrus.Infof("Pushing image %s", tag)

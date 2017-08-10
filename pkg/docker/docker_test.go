@@ -32,7 +32,7 @@ func TestBuildImageSuccess(t *testing.T) {
 	}
 
 	buildConfig := docker.DockerBuildConfig{
-		Tags:        []string{"test_image"},
+		VersionTags:        []string{"test_image"},
 		BuildFolder: dir,
 	}
 
@@ -52,7 +52,7 @@ func TestBuildImageIllegalDockerfile(t *testing.T) {
 	}
 
 	buildConfig := docker.DockerBuildConfig{
-		Tags:        []string{"test_image"},
+		VersionTags:        []string{"test_image"},
 		BuildFolder: dir,
 	}
 
@@ -73,7 +73,7 @@ func TestBuildImageError(t *testing.T) {
 	}
 
 	buildConfig := docker.DockerBuildConfig{
-		Tags:        []string{"test_image"},
+		VersionTags:        []string{"test_image"},
 		BuildFolder: dir,
 	}
 
