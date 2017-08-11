@@ -16,6 +16,7 @@ import (
 	"os/user"
 	"path/filepath"
 	"strings"
+	"github.com/skatteetaten/architect/pkg/config/runtime"
 )
 
 type RegistryCredentials struct {
@@ -25,8 +26,8 @@ type RegistryCredentials struct {
 }
 
 type DockerBuildConfig struct {
-	VersionTags []string
-	BuildFolder string
+	AuroraVersion runtime.AuroraVersion
+	BuildFolder   string
 }
 
 type DockerClient struct {

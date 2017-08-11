@@ -1,5 +1,9 @@
 package config
 
+import (
+	"strings"
+)
+
 type ApplicationType string
 
 const (
@@ -41,7 +45,10 @@ type DockerSpec struct {
 	TagOverwrite           bool
 }
 
-//TODO Would it be more idiomatic Go to use bitmask?
+type BuilderSpec struct {
+	Version string
+}
+
 type PushExtraTags struct {
 	Latest bool
 	Major  bool
@@ -49,6 +56,40 @@ type PushExtraTags struct {
 	Patch  bool
 }
 
-type BuilderSpec struct {
-	Version string
+// Generates the tags given the appversion and extra tag configuration. Don't do any filtering
+func (m *PushExtraTags) ToStringValue() string {
+	str := make([]string, 0, 5)
+	if m.Major {
+		str = append(str, "major")
+	}
+	if m.Minor {
+		str = append(str, "minor")
+	}
+	if m.Patch {
+		str = append(str, "patch")
+	}
+	if m.Latest {
+		str = append(str, "latest")
+	}
+	return strings.Join(str, ",")
 }
+
+func ParseExtraTags(i string) PushExtraTags {
+	p := PushExtraTags{}
+	if strings.Contains(i, "major") {
+		p.Major = true
+	}
+	if strings.Contains(i, "minor") {
+		p.Minor = true
+	}
+	if strings.Contains(i, "patch") {
+		p.Patch = true
+	}
+	if strings.Contains(i, "latest") {
+		p.Latest = true
+	}
+	return p
+}
+
+
+

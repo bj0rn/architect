@@ -200,23 +200,6 @@ func newConfig(buildConfig []byte) (*Config, error) {
 	return c, nil
 }
 
-func ParseExtraTags(i string) PushExtraTags {
-	p := PushExtraTags{}
-	if strings.Contains(i, "major") {
-		p.Major = true
-	}
-	if strings.Contains(i, "minor") {
-		p.Minor = true
-	}
-	if strings.Contains(i, "patch") {
-		p.Patch = true
-	}
-	if strings.Contains(i, "latest") {
-		p.Latest = true
-	}
-	return p
-}
-
 func findOutputRepository(dockerName string) (string, error) {
 	name, err := reference.ParseNamed(dockerName)
 	if err != nil {
