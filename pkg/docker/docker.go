@@ -11,12 +11,12 @@ import (
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
 	"github.com/pkg/errors"
+	"github.com/skatteetaten/architect/pkg/config/runtime"
 	"io"
 	"os"
 	"os/user"
 	"path/filepath"
 	"strings"
-	"github.com/skatteetaten/architect/pkg/config/runtime"
 )
 
 type RegistryCredentials struct {
@@ -26,8 +26,9 @@ type RegistryCredentials struct {
 }
 
 type DockerBuildConfig struct {
-	AuroraVersion runtime.AuroraVersion
-	BuildFolder   string
+	AuroraVersion    *runtime.AuroraVersion
+	DockerRepository string ///TODO: Refactor? We need to have to different for nodejs
+	BuildFolder      string
 }
 
 type DockerClient struct {
@@ -80,7 +81,6 @@ func (d *DockerClient) TagImage(imageId string, tag string) error {
 	}
 	return nil
 }
-
 
 func (d *DockerClient) PushImage(tag string, credentials *RegistryCredentials) error {
 	logrus.Infof("Pushing image %s", tag)

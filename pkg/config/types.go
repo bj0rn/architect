@@ -12,31 +12,36 @@ const (
 )
 
 type Config struct {
-	ApplicationType ApplicationType
-	MavenGav        *MavenGav
-	NodeJSGav       *NodeJSGav
-	Snapshot        bool //NPM don't have snapshot semantics, so this is lifted up.. Should be refactored
-	DockerSpec      DockerSpec
-	BuilderSpec     BuilderSpec
+	ApplicationType   ApplicationType
+	JavaApplication   *JavaApplication
+	NodeJsApplication *NodeApplication
+	DockerSpec        DockerSpec
+	BuilderSpec       BuilderSpec
 }
 
-type MavenGav struct {
-	ArtifactId string
-	GroupId    string
-	Version    string
-	Classifier string
+type JavaApplication struct {
+	ArtifactId    string
+	GroupId       string
+	Version       string
+	Classifier    string
+	BaseImageSpec DockerBaseImageSpec
 }
 
-type NodeJSGav struct {
-	NpmName string
-	Version string
+type NodeApplication struct {
+	NpmName             string
+	Version             string
+	NginxBaseImageSpec  DockerBaseImageSpec
+	NodejsBaseImageSpec DockerBaseImageSpec
+}
+
+type DockerBaseImageSpec struct {
+	BaseImage   string
+	BaseVersion string
 }
 
 type DockerSpec struct {
 	OutputRegistry   string
 	OutputRepository string
-	BaseImage        string
-	BaseVersion      string
 	PushExtraTags    PushExtraTags
 	//This is the external docker registry where we check versions.
 	ExternalDockerRegistry string
@@ -74,6 +79,10 @@ func (m *PushExtraTags) ToStringValue() string {
 	return strings.Join(str, ",")
 }
 
+func (m DockerSpec) GetExternalRegistryWithoutProtocol() string {
+	return strings.TrimPrefix(m.ExternalDockerRegistry, "https://")
+}
+
 func ParseExtraTags(i string) PushExtraTags {
 	p := PushExtraTags{}
 	if strings.Contains(i, "major") {
@@ -90,6 +99,3 @@ func ParseExtraTags(i string) PushExtraTags {
 	}
 	return p
 }
-
-
-

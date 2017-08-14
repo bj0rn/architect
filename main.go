@@ -23,6 +23,7 @@ import (
 	"github.com/skatteetaten/architect/pkg/nodejs/npm"
 	"os"
 	"strings"
+	"github.com/skatteetaten/architect/pkg/docker"
 )
 
 func main() {
@@ -45,6 +46,7 @@ func initializeAndRunOnOpenShift() {
 		ConfigReader:    config.NewInClusterConfigReader(),
 		NexusDownloader: nexus.NewNexusDownloader(mavenRepo),
 		NpmDownloader:   npm.NewRemoteRegistry("http://aurora/npm/repository/npm-internal"),
+		RegistryCredentialsFunc: docker.CusterRegistryCredentials(),
 	}
 	architect.RunArchitect(runConfig)
 }

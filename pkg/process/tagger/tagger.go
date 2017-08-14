@@ -1,46 +1,44 @@
 package tagger
 
 import (
-	"github.com/skatteetaten/architect/pkg/docker"
-	"github.com/skatteetaten/architect/pkg/config/runtime"
-	"github.com/skatteetaten/architect/pkg/config"
 	"github.com/Sirupsen/logrus"
 	"github.com/pkg/errors"
+	"github.com/skatteetaten/architect/pkg/config"
+	"github.com/skatteetaten/architect/pkg/config/runtime"
+	"github.com/skatteetaten/architect/pkg/docker"
 )
 
 type TagResolver interface {
-	ResolveTags(appVersion runtime.AuroraVersion, pushExtratags config.PushExtraTags) error
+	ResolveTags(appVersion *runtime.AuroraVersion, pushExtratags config.PushExtraTags) ([]string, error)
 }
 
 type TagForRetagTagResolver struct {
-	originalImage string //We need to pull this, before we push it.. Will be better with v2 schema
-	repository string
-	registry string
-	githash string
+	Registry   string
+	Repository string
+	Tag        string
 }
 
-func (m *TagForRetagTagResolver) ResolveTags(appVersion runtime.AuroraVersion, pushExtratags config.PushExtraTags) error {
-	return docker.CreateImageNameFromSpecAndTags(m.githash, m.registry, m.repository)
+func (m *TagForRetagTagResolver) ResolveTags(appVersion *runtime.AuroraVersion, pushExtratags config.PushExtraTags) ([]string, error) {
+	return docker.CreateImageNameFromSpecAndTags([]string{m.Tag}, m.Registry, m.Repository), nil
 }
 
 type NormalTagResolver struct {
-	Registry string
+	Registry   string
 	Repository string
-	Overwrite bool
-	Provider docker.ImageInfoProvider
+	Overwrite  bool
+	Provider   docker.ImageInfoProvider
 }
 
-func (m *NormalTagResolver) ResolveTags(appVersion runtime.AuroraVersion, pushExtratags config.PushExtraTags) error {
+func (m *NormalTagResolver) ResolveTags(appVersion *runtime.AuroraVersion, pushExtratags config.PushExtraTags) ([]string, error) {
 	tags, err := findCandidateTags(appVersion, m.Overwrite, m.Repository, pushExtratags, m.Provider)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	tags = append(tags)
-	return docker.CreateImageNameFromSpecAndTags(tags, m.Registry, m.Repository)
+	return docker.CreateImageNameFromSpecAndTags(tags, m.Registry, m.Repository), nil
 }
 
-
-func findCandidateTags(appVersion runtime.AuroraVersion, tagOverwrite bool, outputRepository string,
+func findCandidateTags(appVersion *runtime.AuroraVersion, tagOverwrite bool, outputRepository string,
 	pushExtraTags config.PushExtraTags, provider docker.ImageInfoProvider) ([]string, error) {
 	var repositoryTags []string
 	if !tagOverwrite {
@@ -55,7 +53,7 @@ func findCandidateTags(appVersion runtime.AuroraVersion, tagOverwrite bool, outp
 	}
 	versionTags, err := appVersion.GetApplicationVersionTagsToPush(repositoryTags, pushExtraTags)
 	if err != nil {
-		return nil, errors.Wrapf(err, "Error in FilterVersionTags, app_version=%s, " +
+		return nil, errors.Wrapf(err, "Error in FilterVersionTags, app_version=%s, "+
 			"versionTags=%v, repositoryTags=%v",
 			appVersion, versionTags, repositoryTags)
 	}
