@@ -17,6 +17,7 @@ type Config struct {
 	NodeJsApplication *NodeApplication
 	DockerSpec        DockerSpec
 	BuilderSpec       BuilderSpec
+	BinaryBuild       bool
 }
 
 type JavaApplication struct {

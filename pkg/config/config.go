@@ -198,6 +198,7 @@ func newConfig(buildConfig []byte) (*Config, error) {
 		NodeJsApplication: nodeApp,
 		DockerSpec:        dockerSpec,
 		BuilderSpec:       builderSpec,
+		BinaryBuild:       build.Spec.Source.Type == api.BuildSourceBinary,
 	}
 	return c, nil
 }

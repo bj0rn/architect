@@ -70,7 +70,7 @@ http {
 }
 `
 
-var testVersion = npm.Version{
+var testVersion = npm.VersionedPackageJson{
 	Aurora: npm.AuroraApplication{
 		NodeJS: npm.NodeJSApplication{
 			Main: "test.json",

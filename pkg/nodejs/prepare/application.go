@@ -186,7 +186,11 @@ func (n *NodeJsBuilder) Prepare(c *config.NodeApplication, externalRegistry stri
 	if err != nil {
 		return nil, err
 	}
-	err = prepareNodeJsImage(&v, nodejsBaseImage, version, util.NewFileWriter(pathToNodeJSApplication))
+	packageJsonFromPackage, err := npm.FindPackageJsonInsideTarball(tarball)
+	if err != nil {
+		return nil, err
+	}
+	err = prepareNodeJsImage(packageJsonFromPackage, nodejsBaseImage, version, util.NewFileWriter(pathToNodeJSApplication))
 	if err != nil {
 		return nil, err
 	}
@@ -195,7 +199,7 @@ func (n *NodeJsBuilder) Prepare(c *config.NodeApplication, externalRegistry stri
 	if err != nil {
 		return nil, err
 	}
-	err = prepareNginxImage(&v, nginxBaseImage, version, util.NewFileWriter(pathToNginxApplication))
+	err = prepareNginxImage(packageJsonFromPackage, nginxBaseImage, version, util.NewFileWriter(pathToNginxApplication))
 	if err != nil {
 		return nil, err
 	}
@@ -211,7 +215,7 @@ func (n *NodeJsBuilder) Prepare(c *config.NodeApplication, externalRegistry stri
 	}}, nil
 }
 
-func prepareNginxImage(v *npm.Version, baseImage runtime.BaseImage, version string, writer util.FileWriter) error {
+func prepareNginxImage(v *npm.VersionedPackageJson, baseImage runtime.BaseImage, version string, writer util.FileWriter) error {
 	labels := make(map[string]string)
 	labels["version"] = version
 	labels["maintainer"] = findMaintainer(v.Maintainers)
@@ -238,7 +242,7 @@ func prepareNginxImage(v *npm.Version, baseImage runtime.BaseImage, version stri
 
 }
 
-func prepareNodeJsImage(v *npm.Version, baseImage runtime.BaseImage, version string, writer util.FileWriter) error {
+func prepareNodeJsImage(v *npm.VersionedPackageJson, baseImage runtime.BaseImage, version string, writer util.FileWriter) error {
 	labels := make(map[string]string)
 	labels["version"] = version
 	labels["maintainer"] = findMaintainer(v.Maintainers)
