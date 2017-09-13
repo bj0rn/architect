@@ -35,9 +35,9 @@ if [ -n "${COBERTURA_REPORT+x}" ]; then
 fi
 
 if [ -n "${CHECKSTYLE_REPORT+x}" ]; then
-    gometalinter --vendor --fast --exclude=golint --exclude=vetshadow --checkstyle ./... > $CHECKSTYLE_REPORT
+    gometalinter --vendor --fast --exclude=golint --exclude=vetshadow --checkstyle ./... > $CHECKSTYLE_REPORT || true
 else
-    gometalinter --vendor --fast --exclude=golint --exclude=vetshadow --checkstyle ./...
+    gometalinter --vendor --fast --exclude=golint --exclude=vetshadow ./...
 fi
 
 echo -n "Checking gofmt: "
