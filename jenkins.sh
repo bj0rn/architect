@@ -19,4 +19,4 @@ export CHECKSTYLE_REPORT=checkstyle.xml
 export PATH=$PATH:$HOME/go/bin
 
 # The insanely slow compilel within docker in Mac makes me want to cheat
-#make clean test
+make clean test
