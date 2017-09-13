@@ -11,7 +11,7 @@ node {
     withEnv(["GOROOT=${root}", "PATH+GO=${root}/bin"]) {
       try {
         sh './jenkins.sh'
-        step([$class: 'CoberturaPublisher', coberturaReportFile: 'bin/coverage.xml'])
+        step([$class: 'CoberturaPublisher', coberturaReportFile: 'coverage.xml'])
       } catch(e) {
         currentBuild.result = 'FAILURE'
       } finally {

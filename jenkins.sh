@@ -16,4 +16,4 @@ export COBERTURA_REPORT=coverage.xml
 export PATH=$PATH:$HOME/go/bin
 
 # Cheating... Sloooow mac
-#make clean test
+make clean test
