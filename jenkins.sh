@@ -8,8 +8,8 @@ type gocov-xml 2> /dev/null || go get github.com/AlekSi/gocov-xml
 type gometalinter 2> /dev/null || go get -u gopkg.in/alecthomas/gometalinter
 
 
-
-GOPATH=$GOROOT glide install
+#Mac hack
+#GOPATH=$GOROOT glide install
 
 export JUNIT_REPORT=TEST-junit.xml
 export COBERTURA_REPORT=coverage.xml

@@ -15,6 +15,7 @@ node {
       } catch(e) {
         currentBuild.result = 'FAILURE'
       } finally {
+        step([$class: 'CheckStylePublisher', pattern: '**/checkstyle.xml', unstableTotalAll: '0', usePreviousBuildAsReference: true])
         step([$class: 'JUnitResultArchiver', testResults: 'TEST-junit.xml'])
       }
     }
