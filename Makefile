@@ -91,7 +91,7 @@ build-dirs: .go/src/$(PKG)
 .go/src/$(PKG):
 	@mkdir -p .go/src/$(PKG)
 	@rmdir .go/src/$(PKG)
-	@ln -s -r . .go/src/$(PKG)
+	@ln -s $(shell pwd) .go/src/$(PKG)
 
 
 clean:

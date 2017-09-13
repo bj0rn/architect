@@ -23,11 +23,11 @@ export CGO_ENABLED=0
 TARGETS=$(for d in "$@"; do echo ./$d/...; done)
 
 echo "Running tests:"
-go test -i -installsuffix "static" ${TARGETS}
+go test -pkgdir $GOPATH/pkg -i ${TARGETS}
 if [ -z "${JUNIT_REPORT+x}" ]; then
-    go test -installsuffix "static" ${TARGETS}
+    go test -pkgdir $GOPATH/pkg  ${TARGETS}
 else
-    go test -v -installsuffix "static" ${TARGETS} | go-junit-report > ${JUNIT_REPORT}
+    go test -pkgdir $GOPATH/pkg  -v ${TARGETS} | go-junit-report > ${JUNIT_REPORT}
 fi
 
 if [ -n "${COBERTURA_REPORT+x}" ]; then

@@ -39,8 +39,8 @@ export GOARCH="${ARCH}"
 #
 
 PACKAGES=$(go list ./... | grep "architect/pkg\|architect$\|architect/cmd" | xargs echo)
-go install                                                         \
-    -installsuffix "static"                                        \
+go install                                                       \
+    -pkgdir "$GOPATH/pkg" \
     -ldflags "-X ${PKG}/pkg/version.VERSION=${VERSION}" \
     -gcflags='-B -l' \
     ${PACKAGES}
