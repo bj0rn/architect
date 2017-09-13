@@ -5,7 +5,7 @@ type glide 2> /dev/null || /bin/sh -c "export GOPATH=$GOROOT && curl -k https://
 type go-junit-report 2> /dev/null || go get -u github.com/jstemmer/go-junit-report
 type gocov 2> /dev/null || go get github.com/axw/gocov/gocov
 type gocov-xml 2> /dev/null || go get github.com/AlekSi/gocov-xml
-type gometalinter 2> /dev/null || go get -u gopkg.in/alecthomas/gometalinter
+type gometalinter 2> /dev/null || go get -u gopkg.in/alecthomas/gometalinter && gometalinter -i
 
 
 #Mac hack
