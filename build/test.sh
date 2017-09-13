@@ -34,10 +34,11 @@ if [ -n "${COBERTURA_REPORT+x}" ]; then
     gocov test ${TARGETS} | gocov-xml > ${COBERTURA_REPORT}
 fi
 
-
-
-
-echo
+if [ -n "${CHECKSTYLE_REPORT+x}" ]; then
+    gometalinter --vendor --fast --exclude=golint --exclude=vetshadow --checkstyle ./... > $CHECKSTYLE_REPORT
+else
+    gometalinter --vendor --fast --exclude=golint --exclude=vetshadow --checkstyle ./...
+fi
 
 echo -n "Checking gofmt: "
 ERRS=$(find "$@" -type f -name \*.go | xargs gofmt -l 2>&1 || true)
